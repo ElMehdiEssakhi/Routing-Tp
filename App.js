@@ -1,7 +1,6 @@
-import React from 'react'; 
-import { View, Text, Button } from 'react-native'; 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native'; 
+import AuthProvider, { AuthContext } from "./context/AuthContext"; 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'; 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; 
 import SettingsScreen from './screens/SettingsScreen';
@@ -9,9 +8,19 @@ import HomeScreen from './screens/HomeScreen';
 import DetailsScreen from './screens/DetailsScreen';
 import AppBar from './screens/AppBar';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import AppDrawer from "./navigation/AppDrawer"; 
+import LoginScreen from "./screens/LoginScreen"; 
+import { useContext } from "react"; 
  
 const Stack = createNativeStackNavigator(); 
 const Tab = createBottomTabNavigator(); 
+
+ 
+function RootNavigator() { 
+ const { user } = useContext(AuthContext); 
+ 
+ return user ? <AppDrawer /> : <LoginScreen />; 
+} 
  
 // --- Navigation par pile --- 
 function HomeStack() { 
@@ -29,6 +38,13 @@ function HomeStack() {
  
 // --- Navigation par onglets --- 
 export default function App() { 
+   return ( 
+   <AuthProvider> 
+     <NavigationContainer> 
+       <RootNavigator /> 
+     </NavigationContainer> 
+   </AuthProvider> 
+ );
   return ( 
     <SafeAreaProvider>
       <SafeAreaView style={{flex: 1, backgroundColor: '#000000ff' }}>
